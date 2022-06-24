@@ -45,7 +45,7 @@ class OpenDocumentPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     @JvmStatic
     fun registerWith(registrar: Registrar) {
       val plugin = OpenDocumentPlugin()
-      plugin.activity = registrar.activity()
+      plugin.activity = registrar.activity()!!
       plugin.context = registrar.context()
       val channel = MethodChannel(registrar.messenger(), "open_document")
       channel.setMethodCallHandler(plugin)
@@ -130,7 +130,7 @@ class OpenDocumentPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     if(name.contains("NameFolder:"))
       result.error("Error", name, "Get name app");
     else
-    result.success(name)
+      result.success(name)
   }
 
   @RequiresApi(Build.VERSION_CODES.KITKAT)
@@ -144,9 +144,9 @@ class OpenDocumentPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
   }
 
   private fun nameFolder(): String {
-  return try {
+    return try {
       val app = activity.packageManager.getApplicationInfo(context.packageName, 0);
-     return activity.packageManager.getApplicationLabel(app).toString();
+      return activity.packageManager.getApplicationLabel(app).toString();
     }catch(e: Exception){
       "NameFolder: " + e.localizedMessage;
     }
@@ -177,8 +177,8 @@ class OpenDocumentPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
   override fun onAttachedToActivity(binding: ActivityPluginBinding) {
     channel = MethodChannel(
-            flutterPluginBinding?.binaryMessenger, "open_document")
-    context = flutterPluginBinding?.applicationContext!!
+            flutterPluginBinding!!.binaryMessenger, "open_document")
+    context = flutterPluginBinding!!.applicationContext!!
     activity = binding.activity
     channel?.setMethodCallHandler(this)
   }
